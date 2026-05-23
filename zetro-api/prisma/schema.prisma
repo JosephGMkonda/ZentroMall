@@ -1,78 +1,55 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
-  
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  
-}
- 
-//Models for the systems start from here and each model has its own name Please check it carefully
-
-enum Role{
-    USER 
-    ADMIN
-
 }
 
-
-
-
-model User{
-  id          String         @id @default(uuid())
-  email       String         @unique
-  password    String
-  role        Role          @default(USER)
-  shops       Shop[]
-  orders      Order[]
-
-
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  role      Role     @default(USER)
+  orders    Order[]
+  shops     Shop[]
 }
 
-
-
-model Shop{
-  id                   String           @id @default(uuid())
-  name                 String
-  description          String?
-
-  ownerId              String
-  owner                User             @relation(fields: [ownerId], references: [id])
-  products             Product[]
-  createdAt            DateTime          @default(now())
-  updatedAt            DateTime          @updatedAt
+model Shop {
+  id          String    @id @default(uuid())
+  name        String
+  ownerId     String
+  createdAt   DateTime  @default(now())
+  description String?
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+  owner       User      @relation(fields: [ownerId], references: [id])
 }
 
-
-model Product{
-  id               String           @id @default(uuid())
-  name             String
-  description      String?
-  price            Float
-  stock            Int             @default(0)
-
-  shopId           String
-  shop             Shop           @relation(fields: [shopId], references: [id])
-
-
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        
-
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  price       Float
+  shopId      String
+  createdAt   DateTime @default(now())
+  description String?
+  stock       Int      @default(0)
+  updatedAt   DateTime
+  shop        Shop     @relation(fields: [shopId], references: [id])
 }
 
-model Order{
-  id              String            @id @default(uuid())
-  buyerId         String
-  buyer           User              @relation(fields: [buyerId], references:[id])
-  total Float
-  createdAt       DateTime          @default(now())
+model Order {
+  id        String   @id @default(uuid())
+  buyerId   String
+  total     Float
+  createdAt DateTime @default(now())
+  buyer     User     @relation(fields: [buyerId], references: [id])
+}
+
+enum Role {
+  USER
+  ADMIN
 }

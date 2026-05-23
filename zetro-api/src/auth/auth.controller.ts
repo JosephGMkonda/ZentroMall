@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { RegisterDTO } from './dto/register.dto';
 import { LoginDTO } from './dto/login.dto';
 import { jwtAuthGuard } from './guards/jwt_auth.guard';
-import { dot } from 'node:test/reporters';
+
 
 
 @Controller('auth')
